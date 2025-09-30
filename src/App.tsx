@@ -29,7 +29,7 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} /> 
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="digital-identity" element={<DigitalIdentity />} />
+        <Route path="card" element={<DigitalIdentity />} />
       </Routes>
     </AuthProvider>
   )

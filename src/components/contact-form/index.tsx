@@ -150,6 +150,19 @@ function ContactForm() {
                   </div>
                 </div>
                 <div className='flex flex-col md:flex md:flex-row gap-6'>
+                <div className='w-full'>
+                    <label htmlFor='mobile'>Mobile</label>
+                    <input
+                      className='w-full mt-2 rounded-full border px-5 py-3 outline-hidden transition dark:border-white/20
+                                                focus:border-dark_black/50 dark:focus:border-white/50 dark:bg-black/40'
+                      id='mobile'
+                      type='text'
+                      name='mobile'
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      placeholder='Enter your mobile'
+                    />
+                  </div>
                   <div className='w-full'>
                     <label htmlFor='interest'>
                       What are you interested in?
@@ -172,19 +185,7 @@ function ContactForm() {
 </select>
 
                   </div>
-                  <div className='w-full'>
-                    <label htmlFor='mobile'>Mobile</label>
-                    <input
-                      className='w-full mt-2 rounded-full border px-5 py-3 outline-hidden transition dark:border-white/20
-                                                focus:border-dark_black/50 dark:focus:border-white/50 dark:bg-black/40'
-                      id='mobile'
-                      type='text'
-                      name='mobile'
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      placeholder='Enter your mobile'
-                    />
-                  </div>
+                 
                 </div>
                 <div className='w-full'>
                   <label htmlFor='message'>Message</label>
