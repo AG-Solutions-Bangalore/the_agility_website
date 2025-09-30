@@ -16,23 +16,25 @@ const Footer = () => {
           </div>
           <div className=' '>
           
-            <div className='flex flex-col md:flex-row  gap-4 '>
-            <p className='text-dark_black/60  hover:text-black  flex flex-col gap-6 dark:text-white/60 dark:hover:text-white'>
-            <Phone className='text-black dark:text-white'/>
-                <a href={`tel:${footerData?.contactDetails?.phone}`}>
+            <div className='flex flex-col md:flex-row  gap-8 '>
+            <p className='text-dark_black/60  hover:text-black  flex flex-col  items-start md:items-center gap-6 dark:text-white/60 dark:hover:text-white'>
+            <Phone className='text-black dark:text-white '/>
+                <a href={`tel:${footerData?.contactDetails?.phone}`}   className='tracking-wider'>
                   {footerData?.contactDetails?.phone}
                 </a>
               </p>
             
-              <p className='text-dark_black/60 hover:text-black dark:text-white/60 flex flex-col gap-6 dark:hover:text-white'>
+              <p className='text-dark_black/60 hover:text-black dark:text-white/60 flex flex-col items-start md:items-center gap-6 dark:hover:text-white'>
               <Mail className='text-black dark:text-white'/>
-                <a href={`mailto:${footerData?.contactDetails?.email}`}>
+                <a href={`mailto:${footerData?.contactDetails?.email}`} className=' tracking-wider'>
                   {footerData?.contactDetails?.email}
                 </a>
               </p>
-              <p className='text-dark_black/60 dark:text-white/60 flex flex-col gap-6'>
+              <p className='text-dark_black/60 dark:text-white/60 flex flex-col items-start md:items-center gap-6'>
               <MapPin className='text-black dark:text-white'/>
-                {footerData?.contactDetails?.address}
+           <p className='tracking-wider'>
+           {footerData?.contactDetails?.address}
+           </p>
               </p>
             </div>
           </div>
