@@ -48,7 +48,7 @@ export const footerData = {
     name: "Contact Details",
     address: "Jayanagar, Bengaluru",
     email: "info@theagility.in",
-    phone: "+91 8867171060"
+    phone: "+91 8867171061"
   },
   copyright: "©2025 The Agility. All Rights Reserved"
 }
