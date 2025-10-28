@@ -112,7 +112,7 @@ function ContactForm() {
     setLoader(true)
 
     try {
-      const response = await fetch('https://theagility.in/send-email.php', {
+      const response = await fetch('https://theagility.in/crmapi/public/api/createWebenquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

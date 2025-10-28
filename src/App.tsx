@@ -10,6 +10,10 @@ import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import NotFound from './pages/NotFound'
 import DigitalIdentity from './pages/DigitalIdentity'
+import Blog from './pages/Blog'
+import BlogDetails from './components/home/blog/BlogDetails'
+
+
 
 
 
@@ -21,6 +25,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
       <Route path="contact" element={<Contact />} />
+      <Route path="blog-list" element={<Blog />} />
+      <Route path="blog/:id" element={<BlogDetails />} />
     
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-and-conditions" element={<TermsAndConditions />} />
