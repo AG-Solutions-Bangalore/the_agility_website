@@ -9,7 +9,7 @@ export default function ScrollToTop() {
       top: 0,
       behavior: "smooth",
     });
-  }, [pathname]); // triggers on every route change
+  }, [pathname]); 
 
-  return null; // no UI needed
+  return null; 
 }
