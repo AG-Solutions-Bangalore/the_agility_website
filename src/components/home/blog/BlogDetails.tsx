@@ -1,13 +1,131 @@
-import { ArrowRight } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { ArrowRight, Loader, Loader2 } from "lucide-react";
+import DOMPurify from 'dompurify';
+import moment from "moment";
 
-const BlogDetails = () => {
-  return (
+interface BlogData {
+  id: number;
+  blog_slug: string;
+  blog_title: string;
+  blog_short_description: string;
+  blog_description: string;
+  blog_banner_image: string | null;
+  blog_created_date: string;
+  created_by: string;
+  categories: string;
+}
+
+interface ImageUrl {
+  image_for: string;
+  image_url: string;
+}
+
+interface SponsorItem {
+  sponsors_image: string;
+  sponsors_url: string | null;
+}
+
+interface FeaturedItem {
+  id: number;
+  blog_slug: string;
+  blog_title: string;
+  blog_short_description: string;
+  blog_banner_image: string | null;
+  blog_created_date: string;
+  created_by: string;
+}
+
+const BlogDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [data, setData] = useState<BlogData | null>(null);
+  const [imageUrls, setImageUrls] = useState<{ blog: string; noImage: string }>({
+    blog: "",
+    noImage: "",
+  });
+  const [currentSponsorIndex, setCurrentSponsorIndex] = useState(0);
+
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [sponsors, setSponsors] = useState<SponsorItem[]>([]);
+  const [featured, setFeatured] = useState<FeaturedItem[]>([]);
+console.log("sponsors",sponsors)
+  const createSanitizedHTML = (htmlContent: string) => {
+      return {
+        __html: DOMPurify.sanitize(htmlContent)
+      };
+    };
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchBlog = async () => {
+      try {
+        const res = await axios.get(
+          `https://theagility.in/crmapi/public/api/getBlogsBySlug/${id}`
+        );
+        const frontResult = res.data;
+
+        if (frontResult?.data && frontResult?.image_url) {
+          const blogImageUrl =
+            frontResult.image_url.find(
+              (item: ImageUrl) => item.image_for === "Blog"
+            )?.image_url || "";
+          const noImageUrl =
+            frontResult.image_url.find(
+              (item: ImageUrl) => item.image_for === "No Image"
+            )?.image_url || "";
+
+          setData(frontResult.data);
+          setImageUrls({ blog: blogImageUrl, noImage: noImageUrl });
+          setSponsors(frontResult.sponsors || []);
+          setFeatured(frontResult.featured || []);
+        }
+      } catch (error) {
+        console.error("Error fetching blog details:", error);
+      }
+    };
+
+    fetchBlog();
+  }, [id]);
+  useEffect(() => {
+    if (sponsors.length <= 1) return;
+  
+    const interval = setInterval(() => {
+      setCurrentSponsorIndex((prevIndex) => 
+        prevIndex === sponsors.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); 
+  
+    return () => clearInterval(interval);
+  }, [sponsors.length]);
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+    
+    try {
+      await axios.post('https://theagility.in/crmapi/public/api/createSubscribeEmail', {
+        subscribe_email: email
+      });
+      setEmail('');
+      setMessage('Successfully subscribed! Thank you for joining us.');
+    } catch (error) {
+      console.error('Error subscribing:', error);
+      setMessage('Subscription failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return(
     <>
     <section className='relative w-full pt-24 2xl:pb-20 pb-10 before:content-[""] before:absolute before:w-full before:h-full before:bg-gradient-to-r before:from-yellow_gradient before:via-blue-900/15 before:to-yellow_gradient dark:before:from-dark_yellow_gradient dark:before:via-black dark:before:to-dark_yellow_gradient dark:before:rounded-full dark:before:blur-3xl dark:before:-z-10 before:rounded-full before:top-24 before:blur-3xl before:-z-10'>
    
 
-    </section>
+ 
 
 
     <div className="container px-4">
@@ -27,23 +145,26 @@ const BlogDetails = () => {
       </div> */}
       <div className="flex flex-col gap-4 items-center justify-center text-center">
         <div className="justify-center items-center gap-4 flex flex-row md:flex-row">
-          <a href="category.html" className="inline-flex  px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-300 dark:border-neutral-300 justify-center items-center gap-2.5">
-            <span className="text-neutral-900  text-sm font-medium leading-none">Technology</span>
-          </a>
+          {/* <a href="category.html" className="inline-flex  px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-300 dark:border-neutral-300 justify-center items-center gap-2.5">
+            <span className="text-neutral-900  text-sm font-medium leading-none">{data?.categories}</span>
+          </a> */}
           <div className="justify-start items-center gap-2 flex">
             <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-10.png"/></a>
-            <div className="text-neutral-700  dark:text-gray-300 text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">M. Azumi</a> - 28 January 2014</div>
+            <div className="text-neutral-700  dark:text-gray-300 text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">{data?.created_by}</a> - {moment(data?.blog_created_date).format("DD MMMM YYYY")}</div>
           </div>
         </div>
         <h1 className="text-4xl lg:text-6xl font-bold text-neutral-950 dark:text-neutral-300 max-w-5xl leading-snug">
-          Whispers of Creativity: Unveiling the Symphony of Life's Artistic Voyage
+     {data?.blog_title}
         </h1>
-        <p className="text-base md:text-lg font-medium text-neutral-950 dark:text-gray-300 max-w-3xl">In the grand tapestry of existence, the journey of life unfolds through the lens of creativity, where each individual becomes an artist, contributing unique brushstrokes to the canvas of existence.</p>
+        <p className="text-base md:text-lg font-medium text-neutral-950 dark:text-gray-300 max-w-3xl">
+          
+          
+          {data?.blog_short_description}</p>
       </div>
     </div>
 
     
-  
+    </section>
 
 
 
@@ -55,38 +176,16 @@ const BlogDetails = () => {
          
 
           <div className="single-content text-base font-medium text-neutral-950 dark:text-neutral-300 leading-relaxed max-w-[850px]">
-            <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-25.png" className="rounded-3xl mb-8" alt=""/>
-            <p className="mb-4">In the grand tapestry of existence, the journey of life unfolds through the lens of creativity, where each individual becomes an artist, contributing unique brushstrokes to the canvas of existence.</p>
+            <img src={imageUrls?.blog + data?.blog_banner_image} alt={data?.blog_title} className="rounded-3xl mb-8" />
 
-            <p>In the vast canvas of existence, each individual carries within themselves a unique palette of experiences, emotions, and aspirations. This intricate tapestry, woven with the threads of life, becomes the backdrop for an extraordinary journey – a journey where creativity takes center stage. "Brushstrokes of Life: A Creative Journey Unveiled" is an exploration into the boundless realms of human imagination and expression.</p>
 
-            <h3>The Palette of Beginnings</h3>
 
-            <p>At its core, creativity is the manifestation of the human spirit, a vivid portrayal of the myriad hues that define our existence. This journey begins with the first strokes of infancy, where curiosity and wonder lay the foundation for the artist within. As we traverse the landscapes of childhood, adolescence, and adulthood, our experiences become the pigments that color our canvases.</p>
-
-            <blockquote className="block-quote relative pt-8 pb-8 pl-20 overflow-hidden mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="49" height="36" viewBox="0 0 49 36" className="fill-primary-light-950 dark:fill-primary-dark-950 opacity-20 absolute top-8 left-0">
-                <path d="M10.5 0.5C16.2969 0.5 21 5.20312 21 11V21.5C21 29.2656 14.6562 35.5 7 35.5C5.03125 35.5 3.5 33.9688 3.5 32C3.5 30.1406 5.03125 28.5 7 28.5C10.8281 28.5 14 25.4375 14 21.5V20.9531C12.7969 21.2812 11.7031 21.5 10.5 21.5C4.59375 21.5 0 16.9062 0 11C0 5.20312 4.59375 0.5 10.5 0.5ZM49 11V21.5C49 29.2656 42.6562 35.5 35 35.5C33.0312 35.5 31.5 33.9688 31.5 32C31.5 30.1406 33.0312 28.5 35 28.5C38.8281 28.5 42 25.4375 42 21.5V20.9531C40.7969 21.2812 39.7031 21.5 38.5 21.5C32.5938 21.5 28 16.9062 28 11C28 5.20312 32.5938 0.5 38.5 0.5C44.2969 0.5 49 5.20312 49 11Z" fill="#FFCF01"></path>
-              </svg>
-              <span className="font-normal text-xl block mb-4">Within the strokes of our existence, creativity is the heartbeat that transforms the mundane into a masterpiece, revealing the extraordinary tapestry of our shared human journey</span>
-              <cite>-- Emily Jane</cite>
-            </blockquote>
-
-            <p>The creative journey is a dynamic process, evolving with every stroke, akin to an artist refining their masterpiece. It encapsulates the courage to embrace vulnerability and the resilience to learn from failures. Each brushstroke signifies a lesson learned, a challenge overcome, and a moment of self-discovery. These strokes are not merely about creating art; they are about forging connections with our inner selves and the world around us.</p>
-
-            <h4>Embracing Vulnerability and Resilience</h4>
-
-            <p>The canvas of life is vast, encompassing various forms of creativity – be it in the realms of visual arts, literature, music, or even the art of living. It is a celebration of the human ability to innovate, adapt, and transform mundane moments into extraordinary expressions. The dance of creativity unfolds differently for each person, and the beauty lies in the diversity of perspectives and interpretations.</p>
-
-            <div className="grid md:grid-cols-2 gap-4 mt-8">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-19.png" className="rounded-3xl mb-8" alt=""/>
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-24.png" className="rounded-3xl mb-8" alt=""/>
-            </div>
-
-            <p>Creativity also serves as a powerful tool for introspection and societal reflection. It has the capacity to challenge norms, break barriers, and build bridges. The unveiling of this creative journey is not just a personal revelation but a shared experience that resonates with others, fostering a sense of collective understanding and empathy.</p>
-            <h5>The Multifaceted Nature of Creativity</h5>
-
-            <p>As we navigate the twists and turns of our creative odyssey, it becomes apparent that the canvas is not static. It is a living, breathing entity that mirrors our growth, evolution, and the ever-changing landscapes of our emotions. Embracing the impermanence of the canvas allows us to appreciate the beauty in each fleeting moment, savoring the essence of our creative endeavors.</p>
+            
+            <div 
+                className="mb-4 blog-content"
+                dangerouslySetInnerHTML={createSanitizedHTML(data?.blog_description || '')}
+              />
+           
 
 
           </div>
@@ -97,10 +196,18 @@ const BlogDetails = () => {
               <div>
                 <h6 className="text-lg font-bold mb-4">Popular Tag</h6>
                 <div className="flex flex-wrap gap-2">
-                  <a href="category.html" className="hover-up px-5 py-2 rounded-full border border-neutral-300 dark:border-neutral-300  text-base font-medium hover:bg-neutral-300 dark:text-neutral-300  hover:dark:bg-neutral-300 transition-all duration-300">Art</a>
-                  <a href="category-2.html" className="hover-up px-5 py-2 rounded-full border border-neutral-300 dark:border-neutral-300  text-base font-medium hover:bg-neutral-300 dark:text-neutral-300 hover:dark:bg-neutral-300 transition-all duration-300">Fashion</a>
-                  <a href="category-3.html" className="hover-up px-5 py-2 rounded-full border border-neutral-300 dark:border-neutral-300  text-base font-medium hover:bg-neutral-300 dark:text-neutral-300 hover:dark:bg-neutral-300 transition-all duration-300">Health</a>
-                  <a href="category-4.html" className="hover-up px-5 py-2 rounded-full border border-neutral-300 dark:border-neutral-300  text-base font-medium hover:bg-neutral-300 dark:text-neutral-300 hover:dark:bg-neutral-300 transition-all duration-300">Food</a>
+          
+               
+                      {data?.categories
+    ?.split(",")
+    .map((item, index) => (
+      <span
+        key={index}
+        className="hover-up px-5 py-2 rounded-full border border-neutral-300 dark:border-neutral-300  text-base font-medium hover:bg-neutral-300 dark:text-neutral-300  hover:dark:bg-neutral-300 transition-all duration-300 "
+      >
+        {item.trim()}
+      </span>
+    ))}
                 </div>
               </div>
               <div>
@@ -157,78 +264,60 @@ const BlogDetails = () => {
         <div className="sidebar flex flex-col gap-12 md:max-w-[380px]">
        
           <div className="subscrible p-12 rounded-3xl bg-neutral-200 dark:bg-neutral-dark-200">
-            <h4 className="mb-4 text-2xl font-bold text-neutral-950 dark:text-neutral-300 ">
+            <h4 className="mb-4 text-2xl font-bold text-neutral-950 dark:text-neutral-900 ">
               Subscribe Us
             </h4>
             <p className="font-medium text-neutral-700 dark:text-neutral-dark-700 mb-4 lg:mb-8 max-w-[350px]">
-              Get the latest creative news from IDEKO magazine
+              Get the latest creative news from AGILITY
             </p>
-            <form className="max-w-full overflow-hidden" action="">
-              <div className="flex flex-col md:flex-row mb-4 md:bg-neutral-0 dark:bg-neutral-dark-200 border border-neutral-950 dark:border-neutral-700 rounded-xl overflow-hidden">
-                <input className="focus:outline-none transition duration-200 py-4 bg-neutral-0 dark:bg-neutral-dark-200 rounded-full pl-6 w-full mb-2 md:mb-0" type="text" placeholder="Your email address"/>
-                <button className="group w-full mr-[-3px] sm:w-auto h-14 py-4 px-6 rounded-xl bg-neutral-900 dark:bg-neutral-700 transition duration-200 flex items-center justify-center gap-2" type="submit">
-                <ArrowRight className='text-white'/>
-                </button>
-              </div>
-              <p className="text-neutral-700 text-sm pl-4">* Unsubscribe anytime</p>
-            </form>
+            <form className="max-w-full overflow-hidden" onSubmit={handleSubmit}>
+  <div className="flex flex-col md:flex-row mb-4 md:bg-neutral-0 dark:bg-neutral-dark-200 border border-neutral-950 dark:border-neutral-700 rounded-xl overflow-hidden">
+    <input 
+      className="focus:outline-none transition duration-200 py-4 bg-neutral-0 dark:bg-neutral-0 dark:text-black rounded-full pl-6 w-full mb-2 md:mb-0" 
+      type="email" 
+      placeholder="Your email address"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+    />
+    <button 
+      className="group w-full mr-[-3px] sm:w-auto h-14 py-4 px-6 rounded-xl  bg-neutral-900 dark:bg-neutral-700 transition duration-200 flex items-center justify-center gap-2" 
+      type="submit"
+      disabled={loading}
+    >
+      {loading ? <Loader2 className='text-white animate-spin'/> : <ArrowRight className='text-white'/>}
+    </button>
+  </div>
+  {message && (
+    <p className={`text-sm pl-4 ${message.includes('Successfully') ? 'text-green-600' : 'text-red-600'}`}>
+      {message}
+    </p>
+  )}
+  <p className="text-neutral-700 text-sm pl-4">* Unsubscribe anytime</p>
+</form>
           </div>
    
           <div className="flex flex-col gap-4">
             <h4 className="text-2xl text-neutral-950 font-bold dark:text-neutral-300">Featured <span className="font-light">Posts</span></h4>
             <div className="flex flex-col gap-6">
+
+
+            {featured.slice(0,4).map((blog) => (
             <div className="w-full flex items-center gap-2.5  hover-up">
                 <div className="justify-start items-center gap-4 inline-flex">
                   <a href="single.html" className="rounded-2xl overflow-hidden max-h-[90px] max-w-[106px]">
-                    <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/thumb-04.png"/>
+                    <img src={imageUrls?.blog + blog.blog_banner_image} alt={blog?.blog_title}/>
                   </a>
                   <div className="flex-col justify-start items-start gap-4 inline-flex">
                     <h4>
-                      <a className="text-neutral-950 dark:text-neutral-300 text-base font-bold item-link" href="single.html">Globetrotting in Style: A Journey Through My Lens</a>
+                      <a className="text-neutral-950 dark:text-neutral-300 text-base font-bold item-link" href="single.html">{blog?.blog_title}</a>
                     </h4>
-                    <p className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-300">14 mins read - June 8, 2024</p>
+                    <p className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-300">{blog?.created_by} - {moment(blog?.blog_created_date).format("MMM DD YYYY")}</p>
                   </div>
                 </div>
               </div>
-              <div className="w-full flex items-center gap-2.5  hover-up">
-                <div className="justify-start items-center gap-4 inline-flex">
-                  <a href="single.html" className="rounded-2xl overflow-hidden max-h-[90px] max-w-[106px]">
-                    <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/thumb-04.png"/>
-                  </a>
-                  <div className="flex-col justify-start items-start gap-4 inline-flex">
-                    <h4>
-                      <a className="text-neutral-950 dark:text-neutral-300 text-base font-bold item-link" href="single.html">Globetrotting in Style: A Journey Through My Lens</a>
-                    </h4>
-                    <p className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-300">14 mins read - June 8, 2024</p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full flex items-center gap-2.5  hover-up">
-                <div className="justify-start items-center gap-4 inline-flex">
-                  <a href="single.html" className="rounded-2xl overflow-hidden max-h-[90px] max-w-[106px]">
-                    <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/thumb-04.png"/>
-                  </a>
-                  <div className="flex-col justify-start items-start gap-4 inline-flex">
-                    <h4>
-                      <a className="text-neutral-950 dark:text-neutral-300 text-base font-bold item-link" href="single.html">Globetrotting in Style: A Journey Through My Lens</a>
-                    </h4>
-                    <p className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-300">14 mins read - June 8, 2024</p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full flex items-center gap-2.5  hover-up">
-                <div className="justify-start items-center gap-4 inline-flex">
-                  <a href="single.html" className="rounded-2xl overflow-hidden max-h-[90px] max-w-[106px]">
-                    <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/thumb-04.png"/>
-                  </a>
-                  <div className="flex-col justify-start items-start gap-4 inline-flex">
-                    <h4>
-                      <a className="text-neutral-950 dark:text-neutral-300 text-base font-bold item-link" href="single.html">Globetrotting in Style: A Journey Through My Lens</a>
-                    </h4>
-                    <p className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-300">14 mins read - June 8, 2024</p>
-                  </div>
-                </div>
-              </div>
+
+            ))}
               
             
             
@@ -266,31 +355,121 @@ const BlogDetails = () => {
             </div>
           </div>
    
-          <div className="flex flex-col gap-4">
-            <h4 className="text-2xl text-neutral-950 dark:text-neutral-300 font-bold">Explore <span className="font-light">Categories</span></h4>
-            <div className="justify-start items-start gap-2 inline-flex flex-wrap">
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Art</a>
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Fashion</a>
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Health</a>
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Food</a>
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Travel</a>
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Technology</a>
-              <a className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium" href="category.html">Sports</a>
-            </div>
-          </div>
+        
       
-          <div className="flex flex-col gap-4 ">
-            <h4 className="text-2xl text-neutral-950 font-bold dark:text-neutral-300">Sponsored <span className="font-light">Ads</span></h4>
-            <div className="w-full h-96 relative rounded-2xl">
-              <img className="w-full h-96 left-0 top-0 absolute rounded-2xl" src="https://ideko-html-demo.vercel.app/assets/imgs/pages/banner1.png"/>
-              <div className="w-full h-96 left-0 bottom-0 absolute bg-gradient-to-t from-neutral-950/50 to-transparent rounded-2xl"></div>
-              <div className="w-full px-8 bottom-12 absolute text-center">
-                <span className="text-xl text-neutral-0 font-bold">
-                  <span className="font-light">It seeks to inspire and</span> motivate individuals
-                </span>
-              </div>
+          <div className="flex flex-col gap-4">
+  <h4 className="text-2xl text-neutral-950 font-bold dark:text-neutral-300">Sponsored <span className="font-light">Ads</span></h4>
+  <div className="w-full">
+    {sponsors.length > 0 ? (
+      <div className="relative rounded-2xl overflow-hidden">
+        <div className="relative h-96">
+          {sponsors.map((sponsor, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+                index === currentSponsorIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+            >
+              {sponsor.sponsors_url ? (
+                <a 
+                  href={sponsor.sponsors_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block w-full h-full"
+                >
+                  <img 
+                    className="w-full h-96 object-cover rounded-2xl" 
+                    src={sponsor?.sponsors_url} 
+                    alt={`Sponsor ${index + 1}`}
+                  />
+                  <div className="w-full h-96 left-0 bottom-0 absolute bg-gradient-to-t from-neutral-950/50 to-transparent rounded-2xl"></div>
+                  <div className="w-full px-8 bottom-12 absolute text-center">
+                    <span className="text-xl text-white font-bold cursor-pointer">
+                      <span className="font-light">Sponsored Content</span> - Click to learn more
+                    </span>
+                  </div>
+                </a>
+              ) : (
+                <div className="w-full h-96 relative">
+                  <img 
+                    className="w-full h-96 object-cover rounded-2xl" 
+                    src={imageUrls?.blog + sponsor?.sponsors_image} 
+                    alt={`Sponsor ${index + 1}`}
+                  />
+                  <div className="w-full h-96 left-0 bottom-0 absolute bg-gradient-to-t from-neutral-950/50 to-transparent rounded-2xl"></div>
+                  <div className="w-full px-8 bottom-12 absolute text-center">
+                    <span className="text-xl text-white font-bold">
+                      <span className="font-light">Sponsored Content</span>
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          ))}
+          
+        
+          {sponsors.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+              {sponsors.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSponsorIndex ? 'bg-white scale-110' : 'bg-white/50'
+                  }`}
+                  onClick={() => setCurrentSponsorIndex(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                ></button>
+              ))}
+            </div>
+          )}
+
+        
+          {sponsors.length > 1 && (
+            <>
+              <button
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white rounded-full p-2 transition-all duration-300 z-10"
+                onClick={() => setCurrentSponsorIndex(prev => 
+                  prev === 0 ? sponsors.length - 1 : prev - 1
+                )}
+                aria-label="Previous sponsor"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M11.7267 12L12.6667 11.06L9.61333 8L12.6667 4.94L11.7267 4L7.72667 8L11.7267 12Z"/>
+                </svg>
+              </button>
+              <button
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white rounded-full p-2 transition-all duration-300 z-10"
+                onClick={() => setCurrentSponsorIndex(prev => 
+                  prev === sponsors.length - 1 ? 0 : prev + 1
+                )}
+                aria-label="Next sponsor"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4.27333 4L3.33333 4.94L6.38667 8L3.33333 11.06L4.27333 12L8.27333 8L4.27333 4Z"/>
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    ) : (
+     
+      <div className="w-full h-96 relative rounded-2xl">
+        <img 
+          className="w-full h-96 object-cover rounded-2xl" 
+          src="https://ideko-html-demo.vercel.app/assets/imgs/pages/banner1.png"
+          alt="Default sponsor"
+        />
+        <div className="w-full h-96 left-0 bottom-0 absolute bg-gradient-to-t from-neutral-950/50 to-transparent rounded-2xl"></div>
+        <div className="w-full px-8 bottom-12 absolute text-center">
+          <span className="text-xl text-white font-bold">
+            <span className="font-light">It seeks to inspire and</span> motivate individuals
+          </span>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
         </div>
       </div>
     </div>
@@ -298,9 +477,10 @@ const BlogDetails = () => {
 
 
   {/* ----------- related post  */}
+  
   <section className="relative py-8 lg:py-12 lg:mb-16">
     <div className="container px-4">
-      <h3 className="heading-3 text-left mb-8 lg:mb-12 leading-none"><span className="font-light">Related</span> Posts</h3>
+      <h3 className="heading-3 text-left mb-8 lg:mb-12 leading-none"><span className="font-light">All</span> Posts</h3>
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-[30px]">
         <div className="flex-col justify-start items-start gap-5 inline-flex hover-up border-2 border-neutral-300 dark:border-neutral-300 rounded-3xl overflow-hidden">
           <a href="single.html" className="rounded-2xl overflow-hidden max-h-[180px]">
@@ -318,61 +498,14 @@ const BlogDetails = () => {
             <h3  className="text-neutral-950 dark:text-neutral-300 text-base font-bold  ">Globetrotting in Style: A Journey Through My Lens</h3>
           </div>
         </div>
-        <div className="flex-col justify-start items-start gap-5 inline-flex hover-up border-2 border-neutral-300 dark:border-neutral-300 rounded-3xl overflow-hidden">
-          <a href="single.html" className="rounded-2xl overflow-hidden max-h-[180px]">
-            <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-02.png"/>
-          </a>
-          <div className="flex-col justify-start items-start gap-2.5 flex px-4 pb-4">
-            <div className="justify-start items-center gap-5 inline-flex">
-              <a href="category.html" className="px-3 py-[4px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-300 justify-center items-center gap-1.5 flex">
-                <div className="text-neutral-900 dark:text-neutral-300 text-sm font-medium leading-none">Trending</div>
-              </a>
-              <div className="justify-start items-center gap-2 flex">
-                <div className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-dark-700">June 8, 2024</div>
-              </div>
-            </div>
-            <h3  className="text-neutral-950 dark:text-neutral-300 text-base font-bold  ">Globetrotting in Style: A Journey Through My Lens</h3>
-          </div>
-        </div>
-        <div className="flex-col justify-start items-start gap-5 inline-flex hover-up border-2 border-neutral-300 dark:border-neutral-300 rounded-3xl overflow-hidden">
-          <a href="single.html" className="rounded-2xl overflow-hidden max-h-[180px]">
-            <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-02.png"/>
-          </a>
-          <div className="flex-col justify-start items-start gap-2.5 flex px-4 pb-4">
-            <div className="justify-start items-center gap-5 inline-flex">
-              <a href="category.html" className="px-3 py-[4px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-300 justify-center items-center gap-1.5 flex">
-                <div className="text-neutral-900 dark:text-neutral-300 text-sm font-medium leading-none">Trending</div>
-              </a>
-              <div className="justify-start items-center gap-2 flex">
-                <div className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-dark-700">June 8, 2024</div>
-              </div>
-            </div>
-            <h3  className="text-neutral-950 dark:text-neutral-300 text-base font-bold  ">Globetrotting in Style: A Journey Through My Lens</h3>
-          </div>
-        </div>
-        <div className="flex-col justify-start items-start gap-5 inline-flex hover-up border-2 border-neutral-300 dark:border-neutral-300 rounded-3xl overflow-hidden">
-          <a href="single.html" className="rounded-2xl overflow-hidden max-h-[180px]">
-            <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-02.png"/>
-          </a>
-          <div className="flex-col justify-start items-start gap-2.5 flex px-4 pb-4">
-            <div className="justify-start items-center gap-5 inline-flex">
-              <a href="category.html" className="px-3 py-[4px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-300 justify-center items-center gap-1.5 flex">
-                <div className="text-neutral-900 dark:text-neutral-300 text-sm font-medium leading-none">Trending</div>
-              </a>
-              <div className="justify-start items-center gap-2 flex">
-                <div className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-dark-700">June 8, 2024</div>
-              </div>
-            </div>
-            <h3  className="text-neutral-950 dark:text-neutral-300 text-base font-bold  ">Globetrotting in Style: A Journey Through My Lens</h3>
-          </div>
-        </div>
+   
      
 
       </div>
     </div>
   </section>
 
-
+ 
     </>
   )
 }

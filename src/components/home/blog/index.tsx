@@ -1,44 +1,40 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import moment from 'moment'
+interface BlogItem {
+  id: number;
+  blog_slug: string;
+  blog_title: string;
+  blog_short_description: string;
+  blog_banner_image: string | null;
+  blog_created_date: string;
+  created_by: string;
+  blog_categories_ids: string;
+  categories: string;
+}
 
-const BlogList = () => {
+interface ImageUrls {
+  blog: string;
+  noImage: string;
+}
+
+interface BlogListProps {
+  blogs: BlogItem[];
+  imageUrls: ImageUrls;
+  featuredBlogs: BlogItem[];
+  featuredImageUrls: ImageUrls;
+}
+const BlogList: React.FC<BlogListProps> = ({
+  blogs,
+  imageUrls,
+  featuredBlogs,
+  featuredImageUrls,
+}) => {
+
+  console.log("featuredBlogs",featuredBlogs)
+  console.log("featuredImageUrls",featuredImageUrls)
   const navigate = useNavigate()
-  const blogs = [
-    {
-      id: 1,
-      type: 'main',
-      image: 'https://ideko-html-demo.vercel.app/assets/imgs/pages/img-05.png',
-      tag: 'Trending',
-      author: 'Alida',
-      date: 'June 8, 2024',
-      title: 'Brushstrokes of Life: A Creative Journey Unveiled',
-      excerpt: 'Discover the narrative woven through each brushstroke, portraying the delicate dance between chaos and harmony. As we navigate the intricate landscapes of inspiration, we unravel the stories that shape us.'
-    },
-    {
-      id: 2,
-      image: 'https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png',
-      tag: 'Trending',
-      readTime: '2 mins read',
-      date: '16 Jan 2024',
-      title: 'Mindful Living: Practices for a Balanced Life'
-    },
-    {
-      id: 3,
-      image: 'https://ideko-html-demo.vercel.app/assets/imgs/pages/img-08.png',
-      tag: 'Science',
-      readTime: '9 mins read',
-      date: '16 Jan 2024',
-      title: 'Exploring Quantum Computing: A Paradigm Shift'
-    },
-    {
-      id: 4,
-      image: 'https://ideko-html-demo.vercel.app/assets/imgs/pages/img-07.png',
-      tag: 'Travel',
-      readTime: '12 mins read',
-      date: '16 Jan 2024',
-      title: 'Emerging Trends in Renewable Energy: A Green Future'
-    }
-  ]
+  
 
   return (
     <>
@@ -65,84 +61,77 @@ const BlogList = () => {
             <div className="lg:row-span-3">
               <div className="  overflow-hidden ">
                 <img 
-                  src={blogs[0].image} 
-                  alt={blogs[0].title}
+                  src={imageUrls.blog +blogs[0].blog_banner_image} 
+                  alt={blogs[0].blog_title}
                   className="w-full rounded-3xl  object-cover"
                 />
                 <div className=" cursor-pointer  mt-2">
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium">
-                      {blogs[0].tag}
+                    <span >
+                   
+  {blogs[0].categories
+    ?.split(",")
+    .map((item, index) => (
+      <span
+        key={index}
+        className="px-4 py-1.5 dark:bg-white/20 bg-black/20 backdrop-blur-sm rounded-full text-sm font-medium mr-2 "
+      >
+        {item.trim()}
+      </span>
+    ))}
+
+
                     </span>
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-pink-500"></div>
-                      <span className="text-sm">{blogs[0].author} - {blogs[0].date}</span>
+                      <span className="text-sm">{blogs[0].created_by} - {moment(blogs[0].blog_created_date).format("DD-MMM-YYYY")}</span>
                     </div>
                   </div>
-                  <h2 onClick={()=>navigate(`/blog/${encodeURIComponent(blogs[0].title)}`)} className="text-2xl font-semibold mb-3">{blogs[0].title}</h2>
-                  <p className="dark:text-gray-300 text-gray-800 text-sm leading-relaxed">{blogs[0].excerpt}</p>
+                  <h2 onClick={()=>navigate(`/blog/${encodeURIComponent(blogs[0]?.blog_slug)}`)} className="text-2xl cursor-pointer hover:text-orange-800 font-semibold mb-3">{blogs[0]?.blog_title}</h2>
+                  <p className="dark:text-gray-300 text-gray-800 text-sm leading-relaxed">{blogs[0]?.blog_short_description}</p>
                 </div>
               </div>
             </div>
 
         
-            {blogs.slice(1).map((blog) => (
+            {blogs.slice(1,4).map((blog) => (
               <div key={blog.id} className="group cursor-pointer hidden sm:block ">
                 <div className="flex gap-1  sm:gap-6 items-start">
                   <div className="relative overflow-hidden rounded-2xl w-[10rem] sm:w-[15rem]  h-40 flex-shrink-0">
                     <img 
-                      src={blog.image} 
-                      alt={blog.title}
+                      src={imageUrls.blog + blog.blog_banner_image} 
+                      alt={blog.blog_title}
                       className="w-[10rem] sm:w-[15rem]  group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
                   <div className="flex-1 pt-2">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="px-3 py-1 dark:bg-white/10 bg-black/10 backdrop-blur-sm rounded-full text-xs font-medium border border-white/20">
-                        {blog.tag}
+                      <span className="">
+                      {blog.categories
+    ?.split(",")
+    .map((item, index) => (
+      <span
+        key={index}
+        className="px-3 py-1 dark:bg-white/10 bg-black/10 backdrop-blur-sm rounded-full text-xs font-medium border border-white/20 mr-2 "
+      >
+        {item.trim()}
+      </span>
+    ))}
+                       
                       </span>
                       <span className="text-xs text-gray-400">
-                        {blog.readTime} - {blog.date}
+                         {moment(blog.blog_created_date).format("DD-MMM-YYYY")}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold leading-tight group-hover:text-gray-300 transition-colors">
-                      {blog.title}
+                    <h3 onClick={()=>navigate(`/blog/${encodeURIComponent(blog?.blog_slug)}`)} className="text-xl font-semibold leading-tight cursor-pointer hover:text-orange-800">
+                      {blog.blog_title}
                     </h3>
                   </div>
                 </div>
               </div>
             ))}
 
-{blogs.slice(1).map((blog) => (
-  <div key={blog.id} className="group cursor-pointer sm:hidden">
-    <div className="flex gap-1 sm:gap-6 items-start">
-      <div className="relative overflow-hidden rounded-2xl w-full h-40 flex-shrink-0">
-        <img
-          src={blog.image}
-          alt={blog.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
 
-        {/* Bottom shadow overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-
-        <div className="absolute bottom-0 left-0 right-0 p-3">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 dark:bg-white/10 bg-black/30 backdrop-blur-sm rounded-full text-xs font-medium border border-white/20 text-white">
-              {blog.tag}
-            </span>
-            <span className="text-xs text-gray-100">
-              {blog.readTime} • {blog.date}
-            </span>
-          </div>
-          <h3 className="text-lg font-semibold leading-tight text-white group-hover:text-gray-200 transition-colors">
-            {blog.title}
-          </h3>
-        </div>
-      </div>
-    </div>
-  </div>
-))}
 
 
 
@@ -187,112 +176,41 @@ const BlogList = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] gap-y-[35px]">
 
 
+        {featuredBlogs.map((fblog) => (
+ 
 
 
-          <div className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
-            <a href="single.html" className="rounded-2xl overflow-hidden max-h-[370px]">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png"/>
+          <div key={fblog.id} className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
+            <a  className="rounded-2xl overflow-hidden max-h-[370px]">
+              <img 
+              src={featuredImageUrls?.blog + fblog?.blog_banner_image}
+          alt={fblog.blog_title} className='h-[15rem]'/>
             </a>
             <div className="flex-col justify-start items-start gap-1.5 flex">
-              <div className="justify-start items-center gap-5 inline-flex ">
-                <a href="category.html" className="px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-dark-300 justify-center items-center gap-2.5 flex">
-                  <div className="text-neutral-900 dark:text-neutral-dark-950 text-sm font-medium leading-none">Technology</div>
-                </a>
-                <div className="justify-start items-center gap-2  flex">
-                  <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
-                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">Alice Johnson</a> - January 15, 2024</div>
-                </div>
-              </div>
-              <p><a className="text-neutral-950  dark:text-gray-300 text-xl  font-bold leading-snug item-link" href="single.html">Transformative Learning: Adapting to Educational Innovations</a></p>
-            </div>
-          </div>
-          <div className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
-            <a href="single.html" className="rounded-2xl overflow-hidden max-h-[370px]">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png"/>
-            </a>
-            <div className="flex-col justify-start items-start gap-1.5 flex">
-              <div className="justify-start items-center gap-5 inline-flex ">
-                <a href="category.html" className="px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-dark-300 justify-center items-center gap-2.5 flex">
-                  <div className="text-neutral-900 dark:text-neutral-dark-950 text-sm font-medium leading-none">Technology</div>
-                </a>
-                <div className="justify-start items-center gap-2  flex">
-                  <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
-                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">Alice Johnson</a> - January 15, 2024</div>
-                </div>
-              </div>
-              <p><a className="text-neutral-950  dark:text-gray-300 text-xl  font-bold leading-snug item-link" href="single.html">Transformative Learning: Adapting to Educational Innovations</a></p>
-            </div>
-          </div>
-          <div className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
-            <a href="single.html" className="rounded-2xl overflow-hidden max-h-[370px]">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png"/>
-            </a>
-            <div className="flex-col justify-start items-start gap-1.5 flex">
-              <div className="justify-start items-center gap-5 inline-flex ">
-                <a href="category.html" className="px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-dark-300 justify-center items-center gap-2.5 flex">
-                  <div className="text-neutral-900 dark:text-neutral-dark-950 text-sm font-medium leading-none">Technology</div>
-                </a>
-                <div className="justify-start items-center gap-2  flex">
-                  <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
-                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">Alice Johnson</a> - January 15, 2024</div>
-                </div>
-              </div>
-              <p><a className="text-neutral-950  dark:text-gray-300 text-xl  font-bold leading-snug item-link" href="single.html">Transformative Learning: Adapting to Educational Innovations</a></p>
-            </div>
-          </div>
-          <div className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
-            <a href="single.html" className="rounded-2xl overflow-hidden max-h-[370px]">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png"/>
-            </a>
-            <div className="flex-col justify-start items-start gap-1.5 flex">
-              <div className="justify-start items-center gap-5 inline-flex ">
-                <a href="category.html" className="px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-dark-300 justify-center items-center gap-2.5 flex">
-                  <div className="text-neutral-900 dark:text-neutral-dark-950 text-sm font-medium leading-none">Technology</div>
-                </a>
-                <div className="justify-start items-center gap-2  flex">
-                  <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
-                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">Alice Johnson</a> - January 15, 2024</div>
-                </div>
-              </div>
-              <p><a className="text-neutral-950  dark:text-gray-300 text-xl  font-bold leading-snug item-link" href="single.html">Transformative Learning: Adapting to Educational Innovations</a></p>
-            </div>
-          </div>
-          <div className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
-            <a href="single.html" className="rounded-2xl overflow-hidden max-h-[370px]">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png"/>
-            </a>
-            <div className="flex-col justify-start items-start gap-1.5 flex">
-              <div className="justify-start items-center gap-5 inline-flex ">
-                <a href="category.html" className="px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-dark-300 justify-center items-center gap-2.5 flex">
-                  <div className="text-neutral-900 dark:text-neutral-dark-950 text-sm font-medium leading-none">Technology</div>
-                </a>
-                <div className="justify-start items-center gap-2  flex">
-                  <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
-                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">Alice Johnson</a> - January 15, 2024</div>
-                </div>
-              </div>
-              <p><a className="text-neutral-950  dark:text-gray-300 text-xl  font-bold leading-snug item-link" href="single.html">Transformative Learning: Adapting to Educational Innovations</a></p>
-            </div>
-          </div>
-          <div className="flex-col justify-start items-start gap-2 inline-flex hover-up mb-4 ">
-            <a href="single.html" className="rounded-2xl overflow-hidden max-h-[370px]">
-              <img src="https://ideko-html-demo.vercel.app/assets/imgs/pages/img-06.png"/>
-            </a>
-            <div className="flex-col justify-start items-start gap-1.5 flex">
-              <div className="justify-start items-center gap-5 inline-flex ">
-                <a href="category.html" className="px-3 py-[8px] bg-neutral-200 dark:bg-neutral-dark-200 rounded-3xl border border-neutral-200 dark:border-neutral-dark-300 justify-center items-center gap-2.5 flex">
-                  <div className="text-neutral-900 dark:text-neutral-dark-950 text-sm font-medium leading-none">Technology</div>
-                </a>
-                <div className="justify-start items-center gap-2  flex">
-                  <a href="author.html"><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
-                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700"><a href="author.html">Alice Johnson</a> - January 15, 2024</div>
-                </div>
-              </div>
-              <p><a className="text-neutral-950  dark:text-gray-300 text-xl  font-bold leading-snug item-link" href="single.html">Transformative Learning: Adapting to Educational Innovations</a></p>
-            </div>
-          </div>
+              <div className="justify-start items-center  inline-flex ">
+           
+                
 
-
+                    {fblog.categories
+    ?.split(",")
+    .map((item, index) => (
+      <span
+        key={index}
+     className="px-3 py-1 dark:bg-white/10 bg-black/10 backdrop-blur-sm rounded-full text-xs font-medium border border-white/20 mr-2 "
+      >
+        {item.trim()}
+      </span>
+    ))}
+            
+                <div className="justify-start items-center gap-2  flex">
+                  <a ><img className="w-9 h-9 rounded-3xl" src="https://ideko-html-demo.vercel.app/assets/imgs/avatar/avatar-01.png"/></a>
+                  <div className="text-neutral-700 dark:text-gray-300  text-sm font-medium leading-none dark:text-neutral-dark-700">{fblog?.created_by} - {moment(fblog?.blog_created_date).format("DD-MMM-YYYY")}</div>
+                </div>
+              </div>
+              <p onClick={()=>navigate(`/blog/${encodeURIComponent(fblog?.blog_slug)}`)}  className=" cursor-pointer hover:text-orange-800   text-xl  font-bold leading-snug ">{fblog?.blog_title}</p>
+            </div>
+          </div>
+))}
 
 
 
@@ -303,10 +221,10 @@ const BlogList = () => {
 
         {/* pagination  */}
      
-        <div className="relative">
+        {/* <div className="relative">
   <div className="flex items-center justify-start">
     <nav className="flex items-center gap-2" aria-label="Pagination">
-      {/* Prev Button */}
+   
       <a
         href="#"
         className="text-neutral-950 rounded-full w-12 h-12 bg-[#c59c2a] hover:bg-[#c7d2fe] dark:bg-[#1e293b] dark:hover:bg-[#334155] flex justify-center items-center"
@@ -322,7 +240,7 @@ const BlogList = () => {
         </svg>
       </a>
 
-      {/* Page Numbers */}
+    
       <a
         href="#"
         className="active text-xl font-bold text-neutral-950 bg-[#c59c2a] dark:text-[#f8fafc] dark:bg-[#f1f5f9] rounded-full w-12 h-12 flex items-center justify-center"
@@ -348,7 +266,7 @@ const BlogList = () => {
         4
       </a>
 
-      {/* Next Button */}
+   
       <a
         href="#"
         className="text-neutral-950 rounded-full w-12 h-12 bg-[#c59c2a] hover:bg-[#c7d2fe] dark:bg-[#1e293b] dark:hover:bg-[#334155] flex justify-center items-center"
@@ -365,7 +283,7 @@ const BlogList = () => {
       </a>
     </nav>
   </div>
-</div>
+</div> */}
 
       </div>
       </section>
