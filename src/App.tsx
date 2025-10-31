@@ -13,6 +13,11 @@ import DigitalIdentity from './pages/DigitalIdentity'
 import Blog from './pages/Blog'
 import BlogDetails from './components/home/blog/BlogDetails'
 
+import LoanLayout from './components/layout/LoanLayout'
+import LoanLanding from './components/loan/LoanLanding'
+import LoanService from './components/loan/LoanService'
+import LoanPopup from './components/loan/LoanPopup'
+
 
 
 
@@ -20,6 +25,7 @@ import BlogDetails from './components/home/blog/BlogDetails'
 function App() {
   return (
     <AuthProvider>
+<LoanPopup />
 
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -34,8 +40,14 @@ function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="forgot-password" element={<ForgotPassword />} /> 
           <Route path="*" element={<NotFound />} />
+        
         </Route>
         <Route path="card" element={<DigitalIdentity />} />
+    
+        <Route path="loan" element={<LoanLayout />}>
+          <Route index element={<LoanLanding />} />
+          <Route path="service" element={<LoanService />} />
+        </Route>
       </Routes>
     </AuthProvider>
   )

@@ -40,7 +40,7 @@ const Blog: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        // ✅ Fetch both APIs in parallel
+    
         const [frontRes, featuredRes] = await Promise.all([
           axios.get("https://theagility.in/crmapi/public/api/getFrontBlogs"),
           axios.get("https://theagility.in/crmapi/public/api/getFeaturedBlogs"),
