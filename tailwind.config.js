@@ -30,6 +30,7 @@ export default {
         // pink: "#F4889A",
         blue_gradient: "#D9F3FC",
         yellow_gradient: "#FDF1D3",
+        green_gradient: "#d9ead3",
         pale_yellow: "#F6E683",
         dark_yellow_gradient: "#443f32",
         dark_blue_gradient: "#303d42",
