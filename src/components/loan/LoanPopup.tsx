@@ -240,7 +240,7 @@ const LoanPopup = () => {
             <div className="p-6">
               {!showForm ? (
                 <>
-                  <div className="grid grid-cols-3 gap-3 mb-5">
+                  <div role="button"  onClick={handleApplyNow} className="grid grid-cols-3 gap-3 mb-5">
                     <div className="text-center p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl hover:from-amber-100 hover:to-orange-100 transition-all cursor-pointer group border border-amber-100">
                       <div className="w-10 h-10 mx-auto mb-2 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                         <Home className="w-5 h-5 text-white" />
@@ -250,7 +250,7 @@ const LoanPopup = () => {
                       </p>
                     </div>
 
-                    <div className="text-center p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl hover:from-amber-100 hover:to-orange-100 transition-all cursor-pointer group border border-amber-100">
+                    <div role="button"  onClick={handleApplyNow} className="text-center p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl hover:from-amber-100 hover:to-orange-100 transition-all cursor-pointer group border border-amber-100">
                       <div className="w-10 h-10 mx-auto mb-2 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                         <Building2 className="w-5 h-5 text-white" />
                       </div>
@@ -259,8 +259,8 @@ const LoanPopup = () => {
                       </p>
                     </div>
 
-                    <div className="text-center p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl hover:from-amber-100 hover:to-orange-100 transition-all cursor-pointer group border border-amber-100">
-                      <div className="w-10 h-10 mx-auto mb-2 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
+                    <div role="button"  onClick={handleApplyNow} className="text-center p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl hover:from-amber-100 hover:to-orange-100 transition-all cursor-pointer group border border-amber-100">
+                      <div  className="w-10 h-10 mx-auto mb-2 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                         <Briefcase className="w-5 h-5 text-white" />
                       </div>
                       <p className="text-xs font-semibold text-gray-700">

@@ -10,6 +10,7 @@ import OnlinePresence from '../components/home/online-presence'
 import Solutions from '../components/home/solution'
 import Subscription from '../components/home/subscription'
 import WebResult from '../components/home/web-result'
+import LoanCta from '@/components/home/loan-cta'
 
 const Home = () => {
   useEffect(() => {
@@ -24,6 +25,7 @@ const Home = () => {
      <Innovation />
       <OnlinePresence />
        {/* <CreativeMind /> */}
+       <LoanCta/>
      <CustomerStories />
      {/* <Subscription /> */}
      {/* <Faq /> */}
