@@ -7,7 +7,7 @@ export const headerData: HeaderItem[] = [
     { label: 'Service', href: '/#work' },
     { label: 'Client', href: '/#client' },
     { label: 'Blog', href: '/blog-list' },
-    { label: 'Loan', href: '/loan' },
+  
 
     
     { label: 'Contact', href: '/contact' },
