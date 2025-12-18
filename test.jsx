@@ -5,6 +5,16 @@ import { ArrowRight, Loader, Loader2 } from "lucide-react";
 import DOMPurify from 'dompurify';
 import moment from "moment";
 
+// Shadcn Carousel Components
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 interface BlogData {
   id: number;
   blog_slug: string;
@@ -159,35 +169,6 @@ const BlogDetails: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [sponsors.length]);
-
-
-useEffect(() => {
-  if (allBlogs.length <= 4) return;
-
-  let intervalId: NodeJS.Timeout;
-
-  const startAutoScroll = () => {
-    intervalId = setInterval(() => {
-      setAllBlogs(prev => {
-        const newArray = [...prev];
-        const firstItem = newArray.shift();
-        if (firstItem) {
-          newArray.push(firstItem);
-        }
-        return newArray;
-      });
-    }, 4000);
-  };
-
-  startAutoScroll();
-
-  // Cleanup function
-  return () => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-  };
-}, [allBlogs.length]);
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -551,136 +532,74 @@ useEffect(() => {
         </div>
       </section>
 
-      {/* All Posts Carousel */}
+      {/* All Posts Carousel with Shadcn */}
       <section className="relative py-8 lg:py-12 lg:mb-16">
-  <div className="container px-4">
-    <div className="flex items-center justify-between mb-8 lg:mb-12">
-      <h3 className="heading-3 text-left leading-none">
-        <span className="font-light">All</span> Posts
-      </h3>
-      
-
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => {
-            setAllBlogs(prev => {
-              const newArray = [...prev];
-              const lastItem = newArray.pop();
-              if (lastItem) {
-                newArray.unshift(lastItem);
-              }
-              return newArray;
-            });
-          }}
-          className="w-12 h-12 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 flex items-center justify-center transition-all duration-300 group hover:scale-105"
-          aria-label="Previous posts"
-        >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            className="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white"
-          >
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-        
-        <button
-          onClick={() => {
-            setAllBlogs(prev => {
-              const newArray = [...prev];
-              const firstItem = newArray.shift();
-              if (firstItem) {
-                newArray.push(firstItem);
-              }
-              return newArray;
-            });
-          }}
-          className="w-12 h-12 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 flex items-center justify-center transition-all duration-300 group hover:scale-105"
-          aria-label="Next posts"
-        >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            className="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white"
-          >
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <div 
-      className="grid md:grid-cols-2 lg:grid-cols-4 gap-[30px]"
-      onMouseEnter={() => {
-   
-        const intervals = Object.values(window).filter(val => typeof val === 'number' && val > 0);
-        intervals.forEach(interval => clearInterval(interval));
-      }}
-    >
-      {allBlogs.slice(0, 4).map((blog) => (
-        <div 
-          key={blog.id} 
-          className="flex-col justify-start items-start gap-5 inline-flex hover-up border-2 border-neutral-300 dark:border-neutral-300 rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl group bg-white dark:bg-neutral-900 hover:scale-105 hover:border-orange-400 dark:hover:border-orange-500"
-          onClick={() => navigate(`/blog/${encodeURIComponent(blog.blog_slug)}`)}
-          onMouseEnter={(e) => {
-           
-            e.currentTarget.style.transform = 'translateY(-8px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-       
-          <div className="rounded-2xl overflow-hidden max-h-[180px] w-full relative">
-            <img 
-              src={imageUrls.blog + blog.blog_banner_image} 
-              alt={blog.blog_title}
-              className="h-[15rem] w-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-          
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 rounded-2xl"></div>
-          </div>
-          
-     
-          <div className="flex-col justify-start items-start gap-2.5 flex px-4 pb-4 w-full">
-            <div className="justify-start items-center gap-5 inline-flex">
-              <div className="px-3 py-[4px] bg-neutral-200 dark:bg-neutral-800 rounded-3xl border border-neutral-200 dark:border-neutral-700 justify-center items-center gap-1.5 flex transition-colors duration-300 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 group-hover:border-orange-300">
-                <div className="text-neutral-900 dark:text-neutral-300 text-sm font-medium leading-none transition-colors duration-300 group-hover:text-orange-700 dark:group-hover:text-orange-300">
-                  {blog.categories?.split(',')[0]?.trim() || 'Uncategorized'}
-                </div>
-              </div>
-              <div className="justify-start items-center gap-2 flex">
-                <div className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-400 transition-colors duration-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-200">
-                  {moment(blog.blog_created_date).format("MMM DD, YYYY")}
-                </div>
-              </div>
-            </div>
-            
-            <h3 className="text-neutral-950 dark:text-neutral-300 text-base font-bold line-clamp-2 transition-colors duration-300 group-hover:text-orange-700 dark:group-hover:text-orange-400">
-              {blog.blog_title}
+        <div className="container px-4">
+          <div className="flex items-center justify-between mb-8 lg:mb-12">
+            <h3 className="heading-3 text-left leading-none">
+              <span className="font-light">All</span> Posts
             </h3>
-            
-            <p className="text-neutral-700 dark:text-neutral-400 text-sm line-clamp-2 transition-colors duration-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-200">
-              {blog.blog_short_description}
-            </p>
-            
-          
           </div>
+
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {allBlogs.map((blog) => (
+                <CarouselItem key={blog.id} className="md:basis-1/2 lg:basis-1/4">
+                  <div className="p-1">
+                    <Card 
+                      className="border-2 border-neutral-300 dark:border-neutral-300 rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl group bg-white dark:bg-neutral-900 hover:scale-105 hover:border-orange-400 dark:hover:border-orange-500"
+                      onClick={() => navigate(`/blog/${encodeURIComponent(blog.blog_slug)}`)}
+                    >
+                      <CardContent className="p-0">
+                        {/* Blog Image */}
+                        <div className="rounded-2xl overflow-hidden max-h-[180px] w-full relative">
+                          <img 
+                            src={imageUrls.blog + blog.blog_banner_image} 
+                            alt={blog.blog_title}
+                            className="h-[15rem] w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 rounded-2xl"></div>
+                        </div>
+                        
+                        {/* Blog Content */}
+                        <div className="flex-col justify-start items-start gap-2.5 flex px-4 pb-4 pt-4 w-full">
+                          <div className="justify-start items-center gap-5 inline-flex">
+                            <div className="px-3 py-[4px] bg-neutral-200 dark:bg-neutral-800 rounded-3xl border border-neutral-200 dark:border-neutral-700 justify-center items-center gap-1.5 flex transition-colors duration-300 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 group-hover:border-orange-300">
+                              <div className="text-neutral-900 dark:text-neutral-300 text-sm font-medium leading-none transition-colors duration-300 group-hover:text-orange-700 dark:group-hover:text-orange-300">
+                                {blog.categories?.split(',')[0]?.trim() || 'Uncategorized'}
+                              </div>
+                            </div>
+                            <div className="justify-start items-center gap-2 flex">
+                              <div className="text-neutral-700 text-sm font-medium leading-none dark:text-neutral-400 transition-colors duration-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-200">
+                                {moment(blog.blog_created_date).format("MMM DD, YYYY")}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <h3 className="text-neutral-950 dark:text-neutral-300 text-base font-bold line-clamp-2 transition-colors duration-300 group-hover:text-orange-700 dark:group-hover:text-orange-400">
+                            {blog.blog_title}
+                          </h3>
+                          
+                          <p className="text-neutral-700 dark:text-neutral-400 text-sm line-clamp-2 transition-colors duration-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-200">
+                            {blog.blog_short_description}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-0 transform -translate-x-1/2" />
+            <CarouselNext className="absolute right-0 transform translate-x-1/2" />
+          </Carousel>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
     </>
   )
 }
