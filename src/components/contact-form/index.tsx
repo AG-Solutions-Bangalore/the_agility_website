@@ -10,6 +10,8 @@ function ContactForm() {
     mobile: "",
     message: "",
   });
+  const [consent, setConsent] = useState(false);
+
   const [contactVia, setContactVia] = useState({
     sms_c: false,
     rcs_c: false,
@@ -137,11 +139,12 @@ function ContactForm() {
             mobile: formData.mobile,
             interested: formData.interest,
             message: formData.message,
-            sms_c: contactVia.sms_c ? "Yes" : "No",
+            // sms_c: contactVia.sms_c ? "Yes" : "No",
             rcs_c: contactVia.rcs_c ? "Yes" : "No",
             call_c: contactVia.call_c ? "Yes" : "No",
             email_c: contactVia.email_c ? "Yes" : "No",
             whatsapp_c: contactVia.whatsapp_c ? "Yes" : "No",
+            sms_c: consent ? "Yes" : "No",
           }),
         }
       );
@@ -351,70 +354,43 @@ function ContactForm() {
                   )}
                 </div>
                 <div className="w-full">
-                  <label className="block mb-3">
-                    Preferred mode of communication{" "}
+                  <label className="flex gap-3 cursor-pointer select-none items-start sm:items-center">
+                    <input
+                      type="checkbox"
+                      checked={consent}
+                      onChange={() => setConsent((prev) => !prev)}
+                      className="peer hidden"
+                    />
+
+                    {/* Checkbox */}
+                    <span
+                      className={`mt-1 sm:mt-0 shrink-0 w-5 h-5 flex items-center justify-center rounded border transition-all
+        ${
+          consent
+            ? "bg-dark_black border-dark_black dark:bg-white dark:border-white"
+            : "border-gray-400 dark:border-white/40"
+        }`}
+                    >
+                      {consent && (
+                        <Icon
+                          icon="lucide:check"
+                          width={14}
+                          height={14}
+                          className="text-white dark:text-dark_black"
+                        />
+                      )}
+                    </span>
+
+                    {/* Text */}
+                    <span className="text-sm leading-relaxed text-dark_black dark:text-white/80">
+                      I authorize <strong>The Agility</strong> to send
+                      notifications via
+                      <span className="block sm:inline">
+                        {" "}
+                        <strong>SMS / RCS / Call / Email / WhatsApp</strong>
+                      </span>
+                    </span>
                   </label>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                    {[
-                      {
-                        label: "SMS",
-                        key: "sms_c",
-                        icon: "lucide:message-square",
-                      },
-                      {
-                        label: "RCS",
-                        key: "rcs_c",
-                        icon: "lucide:messages-square",
-                      },
-                      { label: "Call", key: "call_c", icon: "lucide:phone" },
-                      { label: "Email", key: "email_c", icon: "lucide:mail" },
-                      {
-                        label: "WhatsApp",
-                        key: "whatsapp_c",
-                        icon: "lucide:message-circle",
-                      },
-                    ].map((item) => {
-                      const active =
-                        contactVia[item.key as keyof typeof contactVia];
-
-                      return (
-                        <label
-                          key={item.key}
-                          className={`flex items-center gap-3 cursor-pointer rounded-xl border px-4 py-3 transition-all
-            ${
-              active
-                ? "border-dark_black bg-dark_black text-white dark:bg-white dark:text-dark_black"
-                : "border-gray-300 dark:border-white/20 hover:border-dark_black"
-            }`}
-                        >
-                          <input
-                            type="checkbox"
-                            className="hidden"
-                            checked={active}
-                            onChange={() =>
-                              handleContactToggle(
-                                item.key as keyof typeof contactVia
-                              )
-                            }
-                          />
-
-                          <Icon
-                            icon={item.icon}
-                            width={20}
-                            height={20}
-                            className={`${
-                              active
-                                ? "text-white dark:text-dark_black"
-                                : "text-dark_black dark:text-white/70"
-                            }`}
-                          />
-
-                          <span className="font-medium">{item.label}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
                 </div>
 
                 <div>
