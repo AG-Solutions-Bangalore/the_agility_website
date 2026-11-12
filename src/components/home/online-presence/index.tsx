@@ -1,76 +1,54 @@
-
-import { Icon } from '@iconify/react/dist/iconify.js'
 import { onlinePresenceList } from '../../../data/pageData'
 
 function OnlinePresence() {
   return (
-   <section id='work'>
-         <div className='2xl:py-20 py-11'>
-           <div className='container'>
-             <div className='flex flex-col justify-center items-center gap-10 md:gap-20'>
-               <div className='max-w-2xl text-center'>
-                 <h2>
-                   How we transformed a small business’s
-                   <span className='instrument-font italic font-normal dark:text-white/70'>
-                     {' '}
-                     online presence
-                   </span>
-                 </h2>
-               </div>
-               <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-4'>
-                 {onlinePresenceList?.map((items:any, index:any) => {
-                   return (
-                     <div
-                       key={index}
-                       className='group flex flex-col gap-6 cursor-pointer'>
-                       <div className='relative '>
-                         <img
-                           src={items.image}
-                           alt={items.title}
-                           width={625}
-                           height={410}
-                           className='rounded-2xl'
-                       
-                         />
-   
-                         {/* Overlay div */}
-                         <a
-                           href={'https://www.framer.com/@wrap-pixel/'}
-                           target='blank'
-                           className='absolute top-0 left-0 bg-black/50 w-full h-full rounded-2xl hidden group-hover:flex'>
-                           <span className='flex justify-end p-5 w-full'>
-                             <Icon
-                               icon='icon-park-solid:circle-right-up'
-                               width='50'
-                               height='50'
-                               style={{ color: '#fbfbfb' }}
-                             />
-                           </span>
-                         </a>
-                       </div>
-   
-                       <div className='flex flex-col items-start gap-1'>
-                         <h5 className='group-hover:text-purple_blue'>
-                           {items.title}
-                         </h5>
-                         <div className='flex gap-3  h-36'>
-                
-                             <p
-                               key={index}
-                               className='text-sm  border-dark_black/10 dark:border-white/50 w-fit py-1.5 px-1 rounded-md hover:bg-dark_black hover:text-white'>
-                               {items.tag}
-                             </p>
-                         
-                         </div>
-                       </div>
-                     </div>
-                   )
-                 })}
-               </div>
-             </div>
-           </div>
-         </div>
-       </section>
+    <section id='work' className='2xl:py-20 py-12'>
+      <div className='container mx-auto px-4'>
+        <div className='flex flex-col justify-center items-center gap-8 md:gap-12'>
+          {/* Section Header */}
+          <div className='max-w-2xl text-center flex flex-col items-center gap-3'>
+            <span className='text-xs uppercase tracking-widest font-semibold text-orange-600 dark:text-orange-400 bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20'>
+              Our Services
+            </span>
+            <h2>
+              How we transformed a small business’s{' '}
+              <span className='instrument-font italic font-normal text-orange-600 dark:text-orange-400'>
+                online presence
+              </span>
+            </h2>
+          </div>
+
+          {/* Service Cards Grid */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full'>
+            {onlinePresenceList?.map((item: any, index: number) => (
+              <div
+                key={index}
+                className='group flex flex-col gap-4 p-4 sm:p-5 rounded-2xl border border-dark_black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-md hover:border-orange-500/40 transition-all duration-300'
+              >
+                {/* Image Container (Controlled compact height, no redirect link, no arrow) */}
+                <div className='relative overflow-hidden rounded-xl h-40 w-full shrink-0'>
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className='w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500'
+                  />
+                </div>
+
+                {/* Content */}
+                <div className='flex flex-col gap-2 flex-1 justify-between'>
+                  <h5 className='text-lg font-semibold text-dark_black dark:text-white leading-snug group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors'>
+                    {item.title}
+                  </h5>
+                  <p className='text-xs text-dark_black/65 dark:text-white/65 leading-relaxed line-clamp-3'>
+                    {item.tag}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 

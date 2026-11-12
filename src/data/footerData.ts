@@ -4,24 +4,14 @@ export const footerData = {
     tagline: "Digital-first solutions for brands, associations, and communities.",
     socialLinks: [
       {
-        icon: "/images/home/footerSocialIcon/twitter.svg",
-        dark_icon: "/images/home/footerSocialIcon/twitter_dark.svg",
-        link: "https://twitter.com"
-      },
-      {
-        icon: "/images/home/footerSocialIcon/linkedin.svg",
-        dark_icon: "/images/home/footerSocialIcon/linkedin_dark.svg",
-        link: "https://linkedin.com/in"
-      },
-      {
-        icon: "/images/home/footerSocialIcon/dribble.svg",
-        dark_icon: "/images/home/footerSocialIcon/dribble_dark.svg",
-        link: "https://dribbble.com"
+        icon: "/images/home/footerSocialIcon/facebook.svg",
+        dark_icon: "/images/home/footerSocialIcon/facebook_dark.svg",
+        link: "https://www.facebook.com/profile.php?id=61592102432019"
       },
       {
         icon: "/images/home/footerSocialIcon/instagram.svg",
         dark_icon: "/images/home/footerSocialIcon/instagram_dark.svg",
-        link: "https://instagram.com"
+        link: "https://www.instagram.com/the_agility_official?srtk=MTdwZXg4NDlidXlwYg=="
       }
     ]
   },

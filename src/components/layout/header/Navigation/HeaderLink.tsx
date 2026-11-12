@@ -56,6 +56,11 @@ const HeaderLinkContent: React.FC<{ item: HeaderItem }> = ({ item }) => {
     <li>
       <Link
         to={item.href}
+        onClick={() => {
+          if (item.href === '/' || item.href === '/#') {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+        }}
         className={`px-4 py-2 font-medium hover:text-black dark:hover:text-black hover:bg-white hover:rounded-3xl hover:shadow-header_shadow 
                     ${
                       activeLink === item.href
