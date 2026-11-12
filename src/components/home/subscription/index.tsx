@@ -42,8 +42,8 @@ function Subscription() {
                       </h2>
                       <Link
                         to='/contact'
-                        className='group text-dark_black font-medium bg-white rounded-full flex items-center gap-4 py-2 pl-5 pr-2 w-fit '>
-                        <span className='group-hover:translate-x-9 transform transition-transform duration-200 ease-in-out'>
+                        className='group text-dark_black font-medium bg-white rounded-full flex items-center gap-4 py-2 pl-5 pr-2 w-fit hover:bg-orange-600 dark:hover:bg-orange-500 transition-colors'>
+                        <span className='text-black dark:text-black group-hover:text-white font-semibold group-hover:translate-x-9 transform transition-transform duration-200 ease-in-out'>
                           Let’s Collaborate
                         </span>
                         <svg

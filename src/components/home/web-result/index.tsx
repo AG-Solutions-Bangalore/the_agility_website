@@ -60,9 +60,9 @@ function WebResult() {
               <div className="flex flex-col sm:flex-row gap-3 items-center">
                 <Link
                   to="/contact"
-                  className="group flex items-center gap-2 lg:gap-4 py-2 px-4 sm:px-5 rounded-full bg-white dark:bg-gray-100 border border-white dark:border-opacity-50 font-medium text-dark_black hover:bg-transparent hover:text-white transition-all duration-200 ease-in-out">
+                  className="group flex items-center gap-2 lg:gap-4 py-2 px-4 sm:px-5 rounded-full bg-white dark:bg-white border border-white font-medium hover:bg-orange-600 dark:hover:bg-orange-500 transition-all duration-200 ease-in-out shrink-0 shadow-md">
 
-                  <span className="transition-transform duration-200 ease-in-out group-hover:translate-x-2">
+                  <span className="text-black dark:text-black group-hover:text-white font-semibold transition-colors duration-200 transition-transform duration-200 ease-in-out group-hover:translate-x-1">
                     Let’s Collaborate
                   </span>
 
@@ -72,7 +72,7 @@ function WebResult() {
                     viewBox="0 0 32 32"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="transition-transform duration-200 ease-in-out group-hover:translate-x-1">
+                    className="transition-transform duration-200 ease-in-out group-hover:translate-x-1 shrink-0">
                     <rect
                       width="32"
                       height="32"

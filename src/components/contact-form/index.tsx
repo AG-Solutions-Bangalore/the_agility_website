@@ -310,11 +310,10 @@ function ContactForm() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="e.g. Rahul Sharma"
-                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${
-                        errors.name
-                          ? "border-red-500"
-                          : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
-                      }`}
+                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${errors.name
+                        ? "border-red-500"
+                        : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                        }`}
                     />
                     {errors.name && (
                       <span className="text-xs text-red-500 mt-0.5">{errors.name}</span>
@@ -332,11 +331,10 @@ function ContactForm() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="e.g. rahul@example.com"
-                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${
-                        errors.email
-                          ? "border-red-500"
-                          : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
-                      }`}
+                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${errors.email
+                        ? "border-red-500"
+                        : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                        }`}
                     />
                     {errors.email && (
                       <span className="text-xs text-red-500 mt-0.5">{errors.email}</span>
@@ -358,11 +356,10 @@ function ContactForm() {
                       value={formData.mobile}
                       onChange={handleChange}
                       placeholder="10-digit mobile number"
-                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${
-                        errors.mobile
-                          ? "border-red-500"
-                          : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
-                      }`}
+                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${errors.mobile
+                        ? "border-red-500"
+                        : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                        }`}
                     />
                     {errors.mobile && (
                       <span className="text-xs text-red-500 mt-0.5">{errors.mobile}</span>
@@ -404,11 +401,10 @@ function ContactForm() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell us about your project, timeline, and goals..."
-                    className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 resize-none ${
-                      errors.message
-                        ? "border-red-500"
-                        : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
-                    }`}
+                    className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 resize-none ${errors.message
+                      ? "border-red-500"
+                      : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                      }`}
                   />
                   {errors.message && (
                     <span className="text-xs text-red-500 mt-0.5">{errors.message}</span>
@@ -425,11 +421,10 @@ function ContactForm() {
                       className="hidden"
                     />
                     <span
-                      className={`mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center rounded-md border transition-all ${
-                        consent
-                          ? "bg-dark_black border-dark_black dark:bg-white dark:border-white"
-                          : "border-dark_black/30 dark:border-white/30"
-                      }`}
+                      className={`mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center rounded-md border transition-all ${consent
+                        ? "bg-dark_black border-dark_black dark:bg-white dark:border-white"
+                        : "border-dark_black/30 dark:border-white/30"
+                        }`}
                     >
                       {consent && (
                         <CheckCircle2 className="w-3.5 h-3.5 text-white dark:text-dark_black" />

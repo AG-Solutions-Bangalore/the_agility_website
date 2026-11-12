@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "../header/Logo";
 import { footerData } from "../../../data/footerData";
-import { Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, Phone, ArrowUpRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const quickLinks = [
@@ -23,18 +23,18 @@ const Footer = () => {
 
   return (
     <footer className="relative pt-16 pb-8 overflow-hidden border-t border-dark_black/10 dark:border-white/10 bg-white/40 dark:bg-black/20 backdrop-blur-sm">
-      <div className="container mx-auto px-4">
+      <div className="w-full max-w-[82.8rem] mx-auto px-4 sm:px-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 items-start justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12 items-start">
           {/* Brand & Tagline & Socials */}
           <div className="lg:col-span-4 flex flex-col gap-5">
             <Logo />
-            <p className="text-dark_black/70 dark:text-white/70 max-w-sm text-sm sm:text-base leading-relaxed">
+            <p className="text-dark_black/70 dark:text-white/70 max-w-sm text-sm leading-relaxed">
               {footerData?.brand?.tagline}
             </p>
 
             {/* Social Icons - Facebook & Instagram only */}
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-3 pt-1">
               {socialLinks.map((item, index) => {
                 const isFb = item.link.toLowerCase().includes("facebook");
                 const label = isFb ? "Facebook" : "Instagram";
@@ -67,8 +67,8 @@ const Footer = () => {
           </div>
 
           {/* Navigation / Quick Links */}
-          <div className="lg:col-span-3 flex flex-col gap-4">
-            <h5 className="text-sm uppercase tracking-wider font-semibold text-dark_black/50 dark:text-white/50">
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            <h5 className="text-xs uppercase tracking-wider font-semibold text-dark_black/50 dark:text-white/50">
               Quick Links
             </h5>
             <ul className="flex flex-col gap-2.5">
@@ -86,13 +86,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Details - Clean & Modern, No Cards */}
-          <div className="lg:col-span-5 flex flex-col gap-4">
-            <h5 className="text-sm uppercase tracking-wider font-semibold text-dark_black/50 dark:text-white/50 mb-1">
+          {/* Contact Details - Balanced 2x2 Layout to Fill Space */}
+          <div className="lg:col-span-6 flex flex-col gap-4">
+            <h5 className="text-xs uppercase tracking-wider font-semibold text-dark_black/50 dark:text-white/50 mb-1">
               Contact Us
             </h5>
 
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
               {/* Phone */}
               <a
                 href={`tel:${footerData?.contactDetails?.phone}`}
@@ -129,7 +129,7 @@ const Footer = () => {
                 </div>
               </a>
 
-              {/* Address */}
+              {/* Office */}
               <div className="flex items-start gap-3.5 text-dark_black dark:text-white">
                 <div className="w-8 h-8 rounded-full bg-orange-500/10 dark:bg-orange-400/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0 mt-0.5">
                   <MapPin className="w-4 h-4" />
@@ -143,6 +143,21 @@ const Footer = () => {
                   </span>
                 </div>
               </div>
+
+              {/* Working Hours */}
+              {/* <div className="flex items-start gap-3.5 text-dark_black dark:text-white">
+                <div className="w-8 h-8 rounded-full bg-orange-500/10 dark:bg-orange-400/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[11px] uppercase font-semibold text-dark_black/50 dark:text-white/50 tracking-wider block">
+                    Working Hours
+                  </span>
+                  <span className="text-sm font-medium leading-relaxed text-dark_black/80 dark:text-white/80">
+                    Mon – Sat: 9:00 AM – 6:30 PM
+                  </span>
+                </div>
+              </div> */}
             </div>
           </div>
         </div>
