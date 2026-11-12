@@ -11,6 +11,8 @@ import Solutions from '../components/home/solution'
 import Subscription from '../components/home/subscription'
 import WebResult from '../components/home/web-result'
 import LoanCta from '@/components/home/loan-cta'
+import FeaturedPosts from '../components/home/featured-posts'
+import NewsArticles from '../components/home/news-articles'
 
 const Home = () => {
   useEffect(() => {
@@ -20,17 +22,17 @@ const Home = () => {
   return (
     <>
       <HeroSection />
-       {/* <Brand /> */}
-     <WebResult />
-     <Innovation />
+      {/* <Brand /> */}
+      <WebResult />
+      <Innovation />
       <OnlinePresence />
-       {/* <CreativeMind /> */}
-       <LoanCta/>
-     <CustomerStories />
-     {/* <Subscription /> */}
-     {/* <Faq /> */}
-        {/* <Achievements /> */}
-       <Solutions />
+      <FeaturedPosts />
+      <LoanCta />
+      <NewsArticles />
+      {/* <Subscription /> */}
+      {/* <Faq /> */}
+      {/* <Achievements /> */}
+      <Solutions />
     </>
   )
 }

@@ -1,16 +1,17 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Mail, MapPin, Phone, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
+import { footerData } from "../../data/footerData";
 
 function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    interest: "design & branding",
+    interest: "Web Development",
     mobile: "",
     message: "",
   });
-  const [consent, setConsent] = useState(false);
+  const [consent, setConsent] = useState(true);
 
   const [contactVia, setContactVia] = useState({
     sms_c: false,
@@ -81,19 +82,15 @@ function ContactForm() {
     setErrors(newErrors);
     return isValid;
   };
-  const handleContactToggle = (key: keyof typeof contactVia) => {
-    setContactVia((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    if (name === "mobile" && value.length > 10) return; // prevent typing beyond 10 digits
+    if (name === "mobile" && value.length > 10) return;
 
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }));
 
@@ -109,7 +106,7 @@ function ContactForm() {
     setFormData({
       name: "",
       email: "",
-      interest: "design & branding",
+      interest: "Web Development",
       mobile: "",
       message: "",
     });
@@ -121,7 +118,7 @@ function ContactForm() {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -139,7 +136,6 @@ function ContactForm() {
             mobile: formData.mobile,
             interested: formData.interest,
             message: formData.message,
-            // sms_c: contactVia.sms_c ? "Yes" : "No",
             rcs_c: contactVia.rcs_c ? "Yes" : "No",
             call_c: contactVia.call_c ? "Yes" : "No",
             email_c: contactVia.email_c ? "Yes" : "No",
@@ -154,7 +150,7 @@ function ContactForm() {
         setSubmitted(true);
         reset();
       } else {
-        console.error("Error sending email:", data);
+        console.error("Error submitting inquiry:", data);
       }
     } catch (error: any) {
       console.error("Error:", error.message);
@@ -162,288 +158,317 @@ function ContactForm() {
       setLoader(false);
     }
   };
-  return (
-    <section>
-      <div className='relative w-full pt-44 2xl:pb-20 pb-10 before:content-[""] before:absolute before:w-full before:h-full before:bg-gradient-to-r before:from-blue_gradient before:via-white before:to-yellow_gradient dark:before:from-dark_blue_gradient dark:before:via-black dark:before:to-dark_yellow_gradient dark:before:rounded-full dark:before:blur-3xl dark:before:-z-10 before:rounded-full before:top-24 before:blur-3xl before:-z-10'>
-        <div className="container relative z-10">
-          <div className="flex flex-col gap-10 md:gap-20">
-            <div className="relative flex flex-col text-center items-center">
-              <h2 className="font-medium w-full max-w-32">
-                Love to hear from you, Get in
-                <span className="instrument-font italic font-normal dark:text-white/70">
-                  {" "}
-                  touch
-                </span>
-              </h2>
-            </div>
 
-            {submitted ? (
-              <div className="flex flex-col items-center gap-5 text-center max-w-xl mx-auto p-6 rounded-lg bg-green/20 dark:bg-white/5">
-                <div className="flex">
-                  <Icon
-                    icon="ix:success-filled"
-                    width="30"
-                    height="30"
-                    style={{ color: "#79D45E" }}
-                  />
-                  <h5 className="text-green dark:text-green ml-2">
-                    Great!!! Email has been successfully sent. We will get in
-                    touch asap.
-                  </h5>
+  return (
+    <section className='relative w-full pt-44 2xl:pb-24 pb-14 before:content-[""] before:absolute before:w-full before:h-full before:bg-gradient-to-r before:from-blue_gradient before:via-white before:to-yellow_gradient dark:before:from-dark_blue_gradient dark:before:via-black dark:before:to-dark_yellow_gradient dark:before:rounded-full dark:before:blur-3xl dark:before:-z-10 before:rounded-full before:top-24 before:blur-3xl before:-z-10'>
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Top Header */}
+        <div className="flex flex-col text-center items-center max-w-3xl mx-auto mb-16">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 mb-4">
+            <Sparkles className="w-3.5 h-3.5" /> Let's Connect
+          </span>
+          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight">
+            Love to hear from you, Get in{" "}
+            <span className="instrument-font italic font-normal text-orange-600 dark:text-orange-400">
+              touch
+            </span>
+          </h1>
+          <p className="mt-4 text-base sm:text-lg text-dark_black/70 dark:text-white/70 max-w-2xl leading-relaxed">
+            Have a project in mind, looking for strategic tech guidance, or ready to collaborate? We'd love to chat.
+          </p>
+        </div>
+
+        {/* Success Screen */}
+        {submitted ? (
+          <div className="max-w-xl mx-auto p-8 sm:p-10 rounded-3xl bg-white dark:bg-dark_black border border-dark_black/10 dark:border-white/10 shadow-2xl text-center flex flex-col items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center">
+              <CheckCircle2 className="w-9 h-9" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-semibold text-dark_black dark:text-white">
+                Message Sent Successfully!
+              </h3>
+              <p className="text-sm text-dark_black/70 dark:text-white/70 leading-relaxed">
+                Thank you for reaching out. We have received your inquiry and our team will get back to you within 24 hours.
+              </p>
+            </div>
+            <div className="flex gap-4 pt-2">
+              <button
+                onClick={() => setSubmitted(false)}
+                className="px-6 py-2.5 rounded-full text-sm font-medium border border-dark_black/20 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition"
+              >
+                Send Another Message
+              </button>
+              <Link
+                to="/"
+                className="px-6 py-2.5 rounded-full text-sm font-medium bg-dark_black dark:bg-white text-white dark:text-dark_black hover:opacity-90 transition flex items-center gap-2"
+              >
+                Back to Home <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        ) : (
+          /* Main 2-Column Grid */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start max-w-7xl mx-auto">
+            {/* Left Column - Contact Details & Pitch */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              <div className="p-8 sm:p-10 rounded-3xl border border-dark_black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-md flex flex-col gap-8 shadow-sm">
+                <div>
+                  <h3 className="text-2xl sm:text-3xl font-semibold mb-3">
+                    Let’s build something bold
+                  </h3>
+                  <p className="text-sm text-dark_black/70 dark:text-white/70 leading-relaxed">
+                    We partner with ambitious brands and forward-thinking organizations to engineer modern digital experiences.
+                  </p>
                 </div>
 
-                <Link
-                  to="/"
-                  className="group w-fit text-black font-medium bg-transparent dark:bg-white/20 dark:hover:bg-white rounded-full flex items-center gap-4 py-2 pl-5 pr-2 hover:bg-transparent border border-dark_black"
-                >
-                  <span className="group-hover:translate-x-9 group-hover:dark:text-dark_black dark:text-white transform transition-transform duration-200 ease-in-out">
-                    Back to home
-                  </span>
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="group-hover:-translate-x-[125px] transition-all duration-200 ease-in-out group-hover:rotate-45"
+                {/* Contact Cards */}
+                <div className="flex flex-col gap-4">
+                  {/* Phone */}
+                  <a
+                    href={`tel:${footerData?.contactDetails?.phone}`}
+                    className="group flex items-center gap-4 p-4 rounded-2xl border border-dark_black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] hover:border-orange-500/40 hover:bg-orange-500/[0.04] transition-all"
                   >
-                    <rect width="32" height="32" rx="16" fill="white" />
-                    <path
-                      d="M11.832 11.3334H20.1654M20.1654 11.3334V19.6668M20.1654 11.3334L11.832 19.6668"
-                      stroke="#1B1D1E"
-                      strokeWidth="1.42857"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Link>
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase font-medium text-dark_black/50 dark:text-white/50 block">
+                        Call Us Directly
+                      </span>
+                      <span className="text-sm font-semibold text-dark_black dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                        {footerData?.contactDetails?.phone}
+                      </span>
+                    </div>
+                  </a>
+
+                  {/* Email */}
+                  <a
+                    href={`mailto:${footerData?.contactDetails?.email}`}
+                    className="group flex items-center gap-4 p-4 rounded-2xl border border-dark_black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] hover:border-orange-500/40 hover:bg-orange-500/[0.04] transition-all"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase font-medium text-dark_black/50 dark:text-white/50 block">
+                        Email Support
+                      </span>
+                      <span className="text-sm font-semibold text-dark_black dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors break-all">
+                        {footerData?.contactDetails?.email}
+                      </span>
+                    </div>
+                  </a>
+
+                  {/* Office */}
+                  <div className="flex items-center gap-4 p-4 rounded-2xl border border-dark_black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02]">
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase font-medium text-dark_black/50 dark:text-white/50 block">
+                        Our Office
+                      </span>
+                      <span className="text-sm font-semibold text-dark_black dark:text-white">
+                        {footerData?.contactDetails?.address}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-dark_black/10 dark:border-white/10 flex items-center gap-2 text-xs text-dark_black/60 dark:text-white/60">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                  Average response time: within 24 hours
+                </div>
               </div>
-            ) : (
+            </div>
+
+            {/* Right Column - Form */}
+            <div className="lg:col-span-7">
               <form
                 onSubmit={handleSubmit}
-                className="flex flex-col bg-white dark:bg-dark_black rounded-2xl p-8 gap-8"
+                className="flex flex-col bg-white dark:bg-dark_black/90 p-8 sm:p-10 rounded-3xl border border-dark_black/10 dark:border-white/10 shadow-xl shadow-black/[0.02] gap-6"
               >
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="w-full">
-                    <label htmlFor="name">
-                      Your Name <span className="text-red-700">*</span>
+                <div>
+                  <h3 className="text-2xl font-semibold">Send us a message</h3>
+                  <p className="text-sm text-dark_black/60 dark:text-white/60 mt-1">
+                    Fill in the form below and we will get back to you promptly.
+                  </p>
+                </div>
+
+                {/* Name & Email Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="name" className="text-sm font-medium text-dark_black/80 dark:text-white/80">
+                      Your Name <span className="text-orange-600">*</span>
                     </label>
                     <input
                       ref={nameInputRef}
-                      className={`w-full mt-2 rounded-full border px-5 py-3 outline-hidden transition dark:border-white/20 focus:border-dark_black/50 dark:focus:border-white/50 dark:bg-black/40 ${
-                        errors.name ? "border-red-500 dark:border-red-400" : ""
-                      }`}
                       id="name"
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="Enter your name"
+                      placeholder="e.g. Rahul Sharma"
+                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${
+                        errors.name
+                          ? "border-red-500"
+                          : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                      }`}
                     />
                     {errors.name && (
-                      <p className="text-red-500 text-sm mt-1 ml-4">
-                        {errors.name}
-                      </p>
+                      <span className="text-xs text-red-500 mt-0.5">{errors.name}</span>
                     )}
                   </div>
 
-                  <div className="w-full">
-                    <label htmlFor="email">
-                      Your Email <span className="text-red-700">*</span>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="email" className="text-sm font-medium text-dark_black/80 dark:text-white/80">
+                      Email Address <span className="text-orange-600">*</span>
                     </label>
                     <input
-                      className={`w-full mt-2 rounded-full border px-5 py-3 outline-hidden transition dark:border-white/20 focus:border-dark_black/50 dark:focus:border-white/50 dark:bg-black/40 ${
-                        errors.email ? "border-red-500 dark:border-red-400" : ""
-                      }`}
                       id="email"
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="Enter your email"
+                      placeholder="e.g. rahul@example.com"
+                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${
+                        errors.email
+                          ? "border-red-500"
+                          : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                      }`}
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1 ml-4">
-                        {errors.email}
-                      </p>
+                      <span className="text-xs text-red-500 mt-0.5">{errors.email}</span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="w-full">
-                    <label htmlFor="mobile">
-                      Mobile <span className="text-red-700">*</span>
+                {/* Mobile & Interest Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="mobile" className="text-sm font-medium text-dark_black/80 dark:text-white/80">
+                      Phone Number <span className="text-orange-600">*</span>
                     </label>
                     <input
-                      className={`w-full mt-2 rounded-full border px-5 py-3 outline-hidden transition dark:border-white/20 focus:border-dark_black/50 dark:focus:border-white/50 dark:bg-black/40 ${
-                        errors.mobile
-                          ? "border-red-500 dark:border-red-400"
-                          : ""
-                      }`}
                       id="mobile"
-                      type="text"
+                      type="tel"
                       name="mobile"
                       maxLength={10}
                       value={formData.mobile}
                       onChange={handleChange}
-                      placeholder="Enter your mobile (10 digits)"
+                      placeholder="10-digit mobile number"
+                      className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 ${
+                        errors.mobile
+                          ? "border-red-500"
+                          : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                      }`}
                     />
                     {errors.mobile && (
-                      <p className="text-red-500 text-sm mt-1 ml-4">
-                        {errors.mobile}
-                      </p>
+                      <span className="text-xs text-red-500 mt-0.5">{errors.mobile}</span>
                     )}
                   </div>
 
-                  <div className="w-full">
-                    <label htmlFor="interest">
-                      What are you interested in?{" "}
-                      <span className="text-red-700">*</span>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="interest" className="text-sm font-medium text-dark_black/80 dark:text-white/80">
+                      Area of Interest <span className="text-orange-600">*</span>
                     </label>
                     <select
-                      className="w-full bg-white mt-2 text-base px-4 rounded-full py-2.5 border transition-all duration-500 dark:border-white/20 focus:outline-0 dark:bg-black/40"
-                      name="interest"
                       id="interest"
+                      name="interest"
                       value={formData.interest}
                       onChange={handleChange}
+                      className="w-full rounded-2xl border border-dark_black/15 dark:border-white/15 px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-dark_black focus:border-orange-500 dark:focus:border-orange-400 cursor-pointer"
                     >
-                      <option value="Brand Strategy">🔷 Brand Strategy</option>
-                      <option value="Digital Marketing">
-                        📣 Digital Marketing
-                      </option>
-                      <option value="Paper to Digital">
-                        🗃️ Paper to Digital
-                      </option>
-                      <option value="Analytics & Reporting">
-                        📊 Analytics & Reporting
-                      </option>
-                      <option value="Web Development">
-                        🌐 Web Development
-                      </option>
-                      <option value="Membership Drives & Cards">
-                        🎟️ Membership Drives & Cards
-                      </option>
-                      <option value="Print Media">🧭 Print Media</option>
-                      <option value="Event Management">
-                        🎉 Event Management
-                      </option>
+                      <option value="Web Development" className="dark:bg-dark_black">🌐 Web Development</option>
+                      <option value="Brand Strategy" className="dark:bg-dark_black">🔷 Brand Strategy</option>
+                      <option value="Digital Marketing" className="dark:bg-dark_black">📣 Digital Marketing</option>
+                      <option value="Analytics & Reporting" className="dark:bg-dark_black">📊 Analytics & Reporting</option>
+                      <option value="Paper to Digital" className="dark:bg-dark_black">🗃️ Paper to Digital</option>
+                      <option value="Membership Drives & Cards" className="dark:bg-dark_black">🎟️ Membership Drives & Cards</option>
+                      <option value="Print Media" className="dark:bg-dark_black">🧭 Print Media</option>
+                      <option value="Event Management" className="dark:bg-dark_black">🎉 Event Management</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="w-full">
-                  <label htmlFor="message">
-                    Message <span className="text-red-700">*</span>
+                {/* Message Field */}
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="message" className="text-sm font-medium text-dark_black/80 dark:text-white/80">
+                    Project Details / Message <span className="text-orange-600">*</span>
                   </label>
                   <textarea
-                    className={`w-full mt-2 rounded-3xl border px-5 py-3 outline-hidden transition dark:border-white/20 focus:border-dark_black/50 dark:focus:border-white/50 dark:bg-black/40 ${
-                      errors.message ? "border-red-500 dark:border-red-400" : ""
-                    }`}
-                    name="message"
                     id="message"
+                    name="message"
+                    rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Let us know your project"
-                    rows={4}
+                    placeholder="Tell us about your project, timeline, and goals..."
+                    className={`w-full rounded-2xl border px-4 py-3 outline-none transition text-sm bg-transparent dark:bg-black/30 resize-none ${
+                      errors.message
+                        ? "border-red-500"
+                        : "border-dark_black/15 dark:border-white/15 focus:border-orange-500 dark:focus:border-orange-400"
+                    }`}
                   />
                   {errors.message && (
-                    <p className="text-red-500 text-sm mt-1 ml-4">
-                      {errors.message}
-                    </p>
+                    <span className="text-xs text-red-500 mt-0.5">{errors.message}</span>
                   )}
                 </div>
-                <div className="w-full">
-                  <label className="flex gap-3 cursor-pointer select-none items-start sm:items-center">
+
+                {/* Consent Checkbox */}
+                <div>
+                  <label className="flex gap-3 cursor-pointer select-none items-start">
                     <input
                       type="checkbox"
                       checked={consent}
                       onChange={() => setConsent((prev) => !prev)}
-                      className="peer hidden"
+                      className="hidden"
                     />
-
-                    {/* Checkbox */}
                     <span
-                      className={`mt-1 sm:mt-0 shrink-0 w-5 h-5 flex items-center justify-center rounded border transition-all
-        ${
-          consent
-            ? "bg-dark_black border-dark_black dark:bg-white dark:border-white"
-            : "border-gray-400 dark:border-white/40"
-        }`}
+                      className={`mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center rounded-md border transition-all ${
+                        consent
+                          ? "bg-dark_black border-dark_black dark:bg-white dark:border-white"
+                          : "border-dark_black/30 dark:border-white/30"
+                      }`}
                     >
                       {consent && (
-                        <Icon
-                          icon="lucide:check"
-                          width={14}
-                          height={14}
-                          className="text-white dark:text-dark_black"
-                        />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-white dark:text-dark_black" />
                       )}
                     </span>
-
-                    {/* Text */}
-                    <span className="text-sm leading-relaxed text-dark_black dark:text-white/80">
-                      I authorize <strong>The Agility</strong> to send
-                      notifications via
-                      <span className="block sm:inline">
-                        {" "}
-                        <strong>SMS / RCS / Call / Email / WhatsApp</strong>
-                      </span>
+                    <span className="text-xs sm:text-sm text-dark_black/70 dark:text-white/70 leading-relaxed">
+                      I authorize <strong>The Agility</strong> to contact me regarding my inquiry via SMS, Call, Email, or WhatsApp.
                     </span>
                   </label>
                 </div>
 
-                <div>
+                {/* Submit Button */}
+                <div className="pt-2">
                   {!loader ? (
                     <button
                       type="submit"
-                      className="group w-fit text-white dark:text-dark_black font-medium bg-dark_black dark:bg-white rounded-full flex items-center gap-4 py-2 pl-5 pr-2 transition-all duration-200 ease-in-out hover:bg-transparent border hover:text-dark_black border-dark_black"
+                      className="group w-fit text-white dark:text-dark_black font-medium bg-dark_black dark:bg-white rounded-full flex items-center gap-4 py-2 pl-6 pr-2.5 transition-all duration-300 hover:bg-orange-600 dark:hover:bg-orange-400 hover:text-white border border-transparent shadow-md"
                     >
-                      <span className="transform transition-transform duration-200 ease-in-out group-hover:translate-x-10">
+                      <span className="transition-transform duration-200 group-hover:translate-x-1">
                         Let's Collaborate
                       </span>
-                      <svg
-                        width="32"
-                        height="32"
-                        viewBox="0 0 32 32"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="transform transition-transform duration-200 ease-in-out group-hover:-translate-x-36 group-hover:rotate-45"
-                      >
-                        <rect
-                          width="32"
-                          height="32"
-                          rx="16"
-                          fill="white"
-                          className="fill-white dark:fill-black transition-colors duration-200 ease-in-out group-hover:fill-black "
-                        />
-                        <path
-                          d="M11.832 11.3334H20.1654M20.1654 11.3334V19.6668M20.1654 11.3334L11.832 19.6668"
-                          stroke="#1B1D1E"
-                          strokeWidth="1.42857"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="stroke-dark_black dark:stroke-white transition-colors duration-200 ease-in-out group-hover:stroke-white"
-                        />
-                      </svg>
+                      <div className="w-8 h-8 rounded-full bg-white dark:bg-dark_black flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+                        <ArrowRight className="w-4 h-4 text-dark_black dark:text-white" />
+                      </div>
                     </button>
                   ) : (
-                    <button className="bg-grey item-center flex gap-2 py-3 px-7 rounded-sm">
-                      <div
-                        className="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500"
-                        role="status"
-                        aria-label="loading"
-                      >
-                        <span className="sr-only">Loading...</span>
-                      </div>{" "}
-                      Submitting
+                    <button
+                      disabled
+                      className="w-fit text-white font-medium bg-dark_black/80 dark:bg-white/80 dark:text-dark_black rounded-full flex items-center gap-3 py-3 px-6 cursor-not-allowed"
+                    >
+                      <div className="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+                      Submitting Inquiry...
                     </button>
                   )}
                 </div>
               </form>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
